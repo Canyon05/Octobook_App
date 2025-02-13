@@ -9,19 +9,13 @@ import SwiftUI
 
 
 struct BookDetails: View {
-    @Environment(ModelData.self) var modelData
+    @ObservedObject var bookData: BookData
     var book: Book
 
-    var bookIndex: Int {
-        modelData.books.firstIndex(where: { $0.id == book.id })!
-    }
-
     var body: some View {
-        @Bindable var modelData = modelData
         ScrollView {
-            
             HStack {
-                book.image  // Dynamically displaying the image
+                book.image
                     .resizable(resizingMode: .stretch)
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 100.0)
@@ -29,7 +23,7 @@ struct BookDetails: View {
                     .padding(.all, 10.0)
                 
                 VStack {
-                    Text(book.name)  // Dynamic book title
+                    Text(book.name)
                         .font(.title2)
                         .fontWeight(.regular)
                         .foregroundColor(Color.black)
@@ -37,10 +31,20 @@ struct BookDetails: View {
                         .lineLimit(1)
                     
                     HStack {
-                        FavoriteButton(isSet: $modelData.books[bookIndex].isFavorite)
-                            .frame(width: /*@START_MENU_TOKEN@*/50.0/*@END_MENU_TOKEN@*/)
-                        ReadButton(isSet: $modelData.books[bookIndex].read)
-                            .frame(width: 50.0)
+                        StarRating(
+                            rating: book.rating,
+                            size: 24
+                        ) { newRating in
+                            bookData.updateRating(for: book, to: newRating)
+                        }
+                        
+                        Button(action: {
+                            bookData.toggleReadStatus(for: book)
+                        }) {
+                            Image(systemName: book.isRead ? "book.closed.fill" : "book.closed")
+                                .foregroundStyle(book.isRead ? .blue : .gray)
+                        }
+                        .frame(width: 50.0)
                     }
                 }
                 .padding([.top, .bottom, .trailing], 10.0)
@@ -48,21 +52,31 @@ struct BookDetails: View {
             .frame(height: 165.0)
             .background(Color(white: 1, opacity: 0.9))
             .cornerRadius(8)
-            .padding(.vertical ,10)
+            .padding(.vertical, 10)
             
-            HStack {
-                Text("Author: \(book.author)")  // Dynamic author
-                    .multilineTextAlignment(.leading)
-                Text("Genre: \(book.category)")  // Dynamic genre
-                    .multilineTextAlignment(.trailing)
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Author:")
+                        .fontWeight(.medium)
+                    Text(book.author)
+                }
+                
+                HStack {
+                    Text("Genre:")
+                        .fontWeight(.medium) 
+                    Text(book.category)
+                }
+                
+                Text("Description:")
+                    .fontWeight(.medium)
+                    .padding(.top, 16)
+                
+                Text(book.description)
+                    .padding(.horizontal, 8)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            
-            Text("Description:")
-                .frame(alignment: .leading)
-                .padding(.top, 25.0)
-            
-            Text(book.description)  // Dynamic description
-                .padding(.horizontal, 25.0)
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .background(Color(white: 1, opacity: 0.8))
         .background {
@@ -78,7 +92,6 @@ struct BookDetails: View {
 }
 
 #Preview {
-    let modelData = ModelData()
-    BookDetails(book: modelData.books[0])
-    .environment(modelData)
+    let bookData = BookData()
+    return BookDetails(bookData: bookData, book: bookData.books[0])
 }

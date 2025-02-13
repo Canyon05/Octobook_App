@@ -10,16 +10,37 @@ import SwiftUI
 
 
 struct Book: Hashable, Codable, Identifiable {
-    var id: Int
+    var id: String
     var name: String
     var category: String
     var author: String
     var description: String
-    var isFavorite: Bool
-    var read: Bool
+    var rating: Int // 0-5 stars
+    var isRead: Bool
     
     private var imageName: String
     var image: Image {
-        Image(imageName)
+        if let uiImage = loadImageFromDocuments(named: imageName) {
+            return Image(uiImage: uiImage)
+        }
+        return Image(imageName)
+    }
+    
+    init(id: String, name: String, category: String, author: String, 
+         description: String, rating: Int, isRead: Bool, imageName: String) {
+        self.id = id
+        self.name = name
+        self.category = category
+        self.author = author
+        self.description = description
+        self.rating = rating
+        self.isRead = isRead
+        self.imageName = imageName
+    }
+    
+    private func loadImageFromDocuments(named: String) -> UIImage? {
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let url = documentsDirectory.appendingPathComponent("\(named).jpg")
+        return UIImage(contentsOfFile: url.path)
     }
 }

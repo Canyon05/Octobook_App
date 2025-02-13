@@ -10,8 +10,6 @@ import SwiftData
 
 @main
 struct OctobookApp: App {
-    @State private var modelData = ModelData()
-
     var body: some Scene {
         WindowGroup {
             ContentView()
