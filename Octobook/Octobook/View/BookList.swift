@@ -123,9 +123,11 @@ struct BookList: View {
             .sheet(isPresented: $showingAddBook) {
                 AddBookView(bookData: bookData)
             }
-        } detail: {
+        }
+        detail: {
             Text("Select a Book")
         }
+        
     }
 }
 

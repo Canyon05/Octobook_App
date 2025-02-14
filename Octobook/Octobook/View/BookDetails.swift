@@ -50,7 +50,7 @@ struct BookDetails: View {
                 .padding([.top, .bottom, .trailing], 10.0)
             }
             .frame(height: 165.0)
-            .background(Color(white: 1, opacity: 0.9))
+            .background(Color.white)
             .cornerRadius(8)
             .padding(.vertical, 10)
             
@@ -78,9 +78,8 @@ struct BookDetails: View {
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .background(Color(white: 1, opacity: 0.8))
         .background {
-            Image("2OctoArm")
+            Image("2OctoArm_White")
                 .resizable(resizingMode: .stretch)
                 .aspectRatio(contentMode: .fill)
         }
