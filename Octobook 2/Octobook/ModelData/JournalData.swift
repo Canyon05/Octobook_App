@@ -8,23 +8,23 @@ Storage for model data.
 import Foundation
 
 
-class UserData: ObservableObject {
-    @Published var users: [User] = []
+class JournalData: ObservableObject {
+    @Published var blogs: [Blog] = []
 
-        private let fileName = "userData.json"
+        private let fileName = "journalData.json"
 
         init() {
-            loadUsers()
+            loadBlogs()
         }
 
-        func loadUsers() {
+        func loadBlogs() {
             // First try to load from documents directory
             let url = getDocumentsDirectory().appendingPathComponent(fileName)
             
             if FileManager.default.fileExists(atPath: url.path) {
                 if let data = try? Data(contentsOf: url),
-                   let decodedUsers = try? JSONDecoder().decode([User].self, from: data) {
-                    self.users = decodedUsers
+                   let decodedBlogs = try? JSONDecoder().decode([Blog].self, from: data) {
+                    self.blogs = decodedBlogs
                     return
                 }
             }
@@ -32,10 +32,10 @@ class UserData: ObservableObject {
             // If that fails, load from bundle
             if let bundleURL = Bundle.main.url(forResource: fileName, withExtension: nil),
                let data = try? Data(contentsOf: bundleURL),
-               let decodedUsers = try? JSONDecoder().decode([User].self, from: data) {
-                self.users = decodedUsers
+               let decodedBlogs = try? JSONDecoder().decode([Blog].self, from: data) {
+                self.blogs = decodedBlogs
                 // Save bundle data to documents for future use
-                saveUsers()
+                saveBlogs()
             } else {
                 print("❌ Could not load users from bundle or documents directory")
             }
@@ -45,15 +45,15 @@ class UserData: ObservableObject {
             FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         }
         
-        private func saveUsers() {
+        private func saveBlogs() {
             let url = getDocumentsDirectory().appendingPathComponent(fileName)
-            if let data = try? JSONEncoder().encode(users) {
+            if let data = try? JSONEncoder().encode(blogs) {
                 try? data.write(to: url)
             }
         }
 
-        func addUser(_ user: User) {
-            users.append(user)
-            saveUsers()
+        func addBlog(_ blog: Blog) {
+            blogs.append(blog)
+            saveBlogs()
         }
 }

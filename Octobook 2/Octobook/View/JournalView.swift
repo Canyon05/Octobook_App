@@ -10,8 +10,16 @@ import SwiftUI
 struct journalView: View {
     @ObservedObject var userData: UserData
     var user: User
+    @ObservedObject var journalData: JournalData
+    var blog: Blog
     
-    @State private var blog: String = ""
+    var filteredBlogs: [Blog] {
+        journalData.blogs.filter { blog in
+            let matchesBook = blog.bookId == user.currentlyReading
+            
+            return matchesBook
+        }
+    }
     
     var body: some View {
         HStack {
@@ -30,33 +38,21 @@ struct journalView: View {
         
         ScrollView {
             let bookData = BookData()
-
+            
             Divider()
             
             VStack{
                 BookRow(bookData: bookData, book: bookData.books[0])
                     .padding(.horizontal, 25.0)
-                Text("kuwlfhuigalryibfiyprbyfibyapiebhyufaebgfuysebfmnlkewnl;NEJFNBWIHBHIL;EFBHEIAL;KIHBFEWAayubgyuaesbyugobrhsyaeu")
-                    .padding([.leading, .bottom, .trailing], 19.0)
-                VStack{
-                    TextField("new blog", text: $blog)
-                        .padding(25)
-                    Spacer()
-                    Divider()
-                    HStack{
-                        Text("Date")
-                        Spacer()
-                        Text("done")
+                Section {
+                    ForEach(filteredBlogs) { blog in
+                        NavigationLink(destination: Blogpost(journalData: journalData, blog: blog)) {
+                            Blogpost(journalData: journalData, blog: blog)
+                        }
                     }
-                    .font(.subheadline)
-                    .padding(5)
-                    .padding(.horizontal, 25.0)
+                } header: {
+                    Text("Blog Posts :")
                 }
-                .frame(height: 300)
-                .background(Color.white)
-                .cornerRadius(15)
-                .shadow(radius: 5)
-                .padding(25)
             }
             
         }
@@ -65,5 +61,6 @@ struct journalView: View {
 
 #Preview {
     let userData = UserData()
-    return journalView(userData: userData, user: userData.users[0])
+    let journalData = JournalData()
+    return journalView(userData: userData, user: userData.users[0], journalData: journalData, blog: journalData.blogs[0])
 }

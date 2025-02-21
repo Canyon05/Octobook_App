@@ -24,7 +24,16 @@ struct ContentView: View {
                 }
                 VStack{
                     let userData = UserData()
-                    journalView(userData: userData, user: userData.users[0])
+                    profileView(userData: userData, user: userData.users[0])
+                }
+                .tabItem{
+                    Image(systemName: "person.fill")
+                    Text("Profile")
+                }
+                VStack{
+                    let userData = UserData()
+                    let journalData = JournalData()
+                    journalView(userData: userData, user: userData.users[0], journalData: journalData, blog: journalData.blogs[0])
                         .background {
                             Image("2OctoArm_White")
                                 .resizable(resizingMode: .stretch)
@@ -34,14 +43,6 @@ struct ContentView: View {
                 .tabItem{
                     Image(systemName: "book.pages")
                     Text("Current Book")
-                }
-                VStack{
-                    let userData = UserData()
-                    profileView(userData: userData, user: userData.users[0])
-                }
-                .tabItem{
-                    Image(systemName: "person.fill")
-                    Text("Profile")
                 }
             }
         }

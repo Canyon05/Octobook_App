@@ -13,10 +13,7 @@ struct User: Hashable, Codable, Identifiable {
     var id: String
     var name: String
     var booksRead: String
-    var favorites: String
     var currentlyReading: String
-    var rating: Int // 0-5 stars
-    var isRead: Bool
     
     private var backgroundImage: String
     var image: Image {
@@ -26,15 +23,11 @@ struct User: Hashable, Codable, Identifiable {
         return Image(backgroundImage)
     }
     
-    init(id: String, name: String, booksRead: String, favorites: String,
-         currentlyReading: String, rating: Int, isRead: Bool, backgroundImage: String) {
+    init(id: String, name: String, booksRead: String, currentlyReading: String, backgroundImage: String) {
         self.id = id
         self.name = name
         self.booksRead = booksRead
-        self.favorites = favorites
         self.currentlyReading = currentlyReading
-        self.rating = rating
-        self.isRead = isRead
         self.backgroundImage = backgroundImage
     }
     

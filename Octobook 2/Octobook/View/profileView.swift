@@ -78,12 +78,9 @@ struct profileView: View {
             .padding(3.0)
             .padding(.leading, 5.0)
             Divider()
-            
+            let journalData = JournalData()
             VStack{
-                BookRow(bookData: bookData, book: bookData.books[0])
-                    .padding(.horizontal, 25.0)
-                Text("kuwlfhuigalryibfiyprbyfibyapiebhyufaebgfuysebfmnlkewnl;NEJFNBWIHBHIL;EFBHEIAL;KIHBFEWAayubgyuaesbyugobrhsyaeu")
-                    .padding([.leading, .bottom, .trailing], 19.0)
+                journalView(userData: userData, user: user, journalData: journalData, blog: journalData.blogs[0])
             }
             
         }
