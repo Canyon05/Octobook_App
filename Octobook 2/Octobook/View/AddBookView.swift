@@ -10,11 +10,13 @@ struct AddBookView: View {
     @State private var description: String = ""
     @State private var rating: Int = 0
     @State private var isRead: Bool = false
+    @State private var pages: String = ""
+    @State private var progress: String = ""
     @State private var showingImagePicker = false
     @State private var selectedImage: UIImage?
     
     var isFormValid: Bool {
-        !name.isEmpty && !author.isEmpty && !category.isEmpty && !description.isEmpty
+        !name.isEmpty && !author.isEmpty && !category.isEmpty && !description.isEmpty && !pages.isEmpty && !progress.isEmpty
     }
     
     var body: some View {
@@ -24,6 +26,10 @@ struct AddBookView: View {
                     TextField("Book Title", text: $name)
                     TextField("Author", text: $author)
                     TextField("Category", text: $category)
+                    TextField("Pages", text: $pages)
+                        .keyboardType(.numberPad)
+                    TextField("Progress", text: $progress)
+                        .keyboardType(.numberPad)
                     
                     Toggle("Already Read", isOn: $isRead)
                 }
@@ -98,6 +104,8 @@ struct AddBookView: View {
             description: description.trimmingCharacters(in: .whitespacesAndNewlines),
             rating: rating,
             isRead: isRead,
+            pages: pages,
+            progress: progress,
             imageName: imageName
         )
         

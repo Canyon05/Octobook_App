@@ -9,33 +9,33 @@ import Foundation
 import SwiftUI
 
 
-struct Book: Hashable, Codable, Identifiable {
+struct User: Hashable, Codable, Identifiable {
     var id: String
     var name: String
-    var category: String
-    var author: String
-    var description: String
+    var booksRead: String
+    var favorites: String
+    var currentlyReading: String
     var rating: Int // 0-5 stars
     var isRead: Bool
     
-    private var imageName: String
+    private var backgroundImage: String
     var image: Image {
-        if let uiImage = loadImageFromDocuments(named: imageName) {
+        if let uiImage = loadImageFromDocuments(named: backgroundImage) {
             return Image(uiImage: uiImage)
         }
-        return Image(imageName)
+        return Image(backgroundImage)
     }
     
-    init(id: String, name: String, category: String, author: String, 
-         description: String, rating: Int, isRead: Bool, imageName: String) {
+    init(id: String, name: String, booksRead: String, favorites: String,
+         currentlyReading: String, rating: Int, isRead: Bool, backgroundImage: String) {
         self.id = id
         self.name = name
-        self.category = category
-        self.author = author
-        self.description = description
+        self.booksRead = booksRead
+        self.favorites = favorites
+        self.currentlyReading = currentlyReading
         self.rating = rating
         self.isRead = isRead
-        self.imageName = imageName
+        self.backgroundImage = backgroundImage
     }
     
     private func loadImageFromDocuments(named: String) -> UIImage? {

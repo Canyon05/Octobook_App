@@ -46,6 +46,16 @@ struct BookDetails: View {
                         }
                         .frame(width: 50.0)
                     }
+                    VStack {
+                        if !book.progress.isEmpty && !book.pages.isEmpty {
+                            let pagesInt = Int(book.pages) ?? 0
+                            if pagesInt > 0 {
+                                let progressInt = Int(book.progress) ?? 0
+                                let progressFinal = Double(progressInt) / Double(pagesInt)
+                                ProgressView(value: progressFinal, total: 1.0)
+                            }
+                        }
+                    }
                 }
                 .padding([.top, .bottom, .trailing], 10.0)
             }

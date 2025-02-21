@@ -1,0 +1,22 @@
+[
+    {
+        "id": "0",
+        "name": "Canyon",
+        "booksRead": "5",
+        "favorites" : "book1",
+        "currentlyReading" : "book3",
+        "rating": 5,
+        "isRead": true,
+        "backgroundImage": "ForthWing_BookCover"
+    },
+    {
+        "id": "1",
+        "name": "Otto",
+        "booksRead": "5",
+        "favorites" : "book2",
+        "currentlyReading" : "book3",
+        "rating": 5,
+        "isRead": true,
+        "backgroundImage": "ForthWing_BookCover"
+    }
+]

@@ -9,6 +9,8 @@ import SwiftUI
 
 
 struct ContentView: View {
+    
+    
     var body: some View {
         
         VStack{
@@ -21,15 +23,21 @@ struct ContentView: View {
                     Text("Library")
                 }
                 VStack{
-                    BookList()
-                        .background(Color.black)
+                    let userData = UserData()
+                    journalView(userData: userData, user: userData.users[0])
+                        .background {
+                            Image("2OctoArm_White")
+                                .resizable(resizingMode: .stretch)
+                                .aspectRatio(contentMode: .fill)
+                        }
                 }
                 .tabItem{
                     Image(systemName: "book.pages")
                     Text("Current Book")
                 }
                 VStack{
-                    profileView()
+                    let userData = UserData()
+                    profileView(userData: userData, user: userData.users[0])
                 }
                 .tabItem{
                     Image(systemName: "person.fill")

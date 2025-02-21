@@ -1,32 +1,38 @@
 [
     {
-        "id": "1",
+        "id": "0",
         "name": "Call me by your Name",
         "category": "Roman",
         "author": "Andre Aciman",
         "description": "Andre Aciman's Call Me by Your Name is the story of a sudden and powerful romance that blossoms between an adolescent boy and a summer guest at his parents' cliffside mansion on the Italian Riviera. Each is unprepared for the consequences of their attraction, when, during the restless summer weeks, unrelenting currents of obsession, fascination, and desire intensify their passion and test the charged ground between them. Recklessly, the two verge toward the one thing both fear they may never truly find again: total intimacy. It is an instant classic and one of the great love stories of our time.",
         "rating": 5,
         "isRead": true,
+        "pages": "400",
+        "progress": "29",
         "imageName": "CallMeByYourName_BookCover"
     },
     {
-        "id": "2",
+        "id": "1",
         "name": "Call me by my Name",
         "category": "Roman",
         "author": "Andre Aciman",
         "description": "Andre Aciman's Call Me by Your Name is the story of a sudden and powerful romance that blossoms between an adolescent boy and a summer guest at his parents' cliffside mansion on the Italian Riviera. Each is unprepared for the consequences of their attraction, when, during the restless summer weeks, unrelenting currents of obsession, fascination, and desire intensify their passion and test the charged ground between them. Recklessly, the two verge toward the one thing both fear they may never truly find again: total intimacy. It is an instant classic and one of the great love stories of our time.",
         "rating": 0,
         "isRead": false,
+        "pages": "30",
+        "progress": "0",
         "imageName": "CallMeByYourName_BookCover"
     },
     {
-        "id": "3",
+        "id": "2",
         "name": "Forth Wing",
         "category": "Fantasie",
         "author": "Elias",
         "description": "Andre Aciman's Call Me by Your Name is the story of a sudden and powerful romance that blossoms between an adolescent boy and a summer guest at his parents' cliffside mansion on the Italian Riviera. Each is unprepared for the consequences of their attraction, when, during the restless summer weeks, unrelenting currents of obsession, fascination, and desire intensify their passion and test the charged ground between them. Recklessly, the two verge toward the one thing both fear they may never truly find again: total intimacy. It is an instant classic and one of the great love stories of our time.",
         "rating": 0,
         "isRead": true,
+        "pages": "700",
+        "progress": "564",
         "imageName": "ForthWing_BookCover"
     }
 ]
