@@ -32,12 +32,10 @@ struct BookRow: View {
                 ) { newRating in
                     bookData.updateRating(for: book, to: newRating)
                 }
-                if !book.progress.isEmpty && !book.pages.isEmpty {
-                    let pagesInt = Int(book.pages) ?? 0
-                    if pagesInt > 0 {
-                        let progressInt = Int(book.progress) ?? 0
-                        let progressFinal = Double(progressInt) / Double(pagesInt)
-                        ProgressView(value: progressFinal, total: 1.0)
+                if let pages = book.pages, let currentPage = book.currentPage {
+                    if pages > 0 {
+                        let progress = Double(currentPage) / Double(pages)
+                        ProgressView(value: progress, total: 1.0)
                     }
                 }
             }

@@ -33,7 +33,7 @@ struct ContentView: View {
                 VStack{
                     let userData = UserData()
                     let journalData = JournalData()
-                    journalView(userData: userData, user: userData.users[0], journalData: journalData, blog: journalData.blogs[0])
+                    JournalView(userData: userData, journalData: journalData, user: userData.users[0], blog: journalData.blogs[0])
                         .background {
                             Image("2OctoArm_White")
                                 .resizable(resizingMode: .stretch)

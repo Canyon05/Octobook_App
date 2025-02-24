@@ -4,6 +4,7 @@
         "userId": "0",
         "bookId": "0",
         "date": "22. Feb 2025",
+        "pages": "50",
         "blogtext": "this book was awodjiuqnwpfwq"
     },
     {
@@ -11,20 +12,23 @@
         "userId": "1",
         "bookId": "1",
         "date": "22. Feb 2025",
+        "pages": "50",
         "blogtext": "this awodjiuqnwpfwq"
     },
     {
         "id": "2",
         "userId": "0",
         "bookId": "0",
-        "date": "22. Feb 2025",
+        "date": "23. Feb 2025",
+        "pages": "50",
         "blogtext": "this book was awodjiuqnwpfwq"
     },
     {
         "id": "3",
         "userId": "0",
         "bookId": "0",
-        "date": "22. Feb 2025",
+        "date": "24. Feb 2025",
+        "pages": "50",
         "blogtext": "this book was awodjiuqnwpfwq"
     }
 ]

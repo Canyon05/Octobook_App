@@ -70,4 +70,15 @@ class BookData: ObservableObject {
             books.append(book)
             saveBooks()
         }
+
+        func updateProgress(for book: Book, to pages: Int) {
+            if let index = books.firstIndex(where: { $0.id == book.id }) {
+                books[index].currentPage = pages
+                // If the book is complete
+                if let totalPages = books[index].pages, pages >= totalPages {
+                    books[index].isRead = true
+                }
+                saveBooks()
+            }
+        }
 }

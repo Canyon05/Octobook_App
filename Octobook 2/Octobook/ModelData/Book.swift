@@ -17,8 +17,8 @@ struct Book: Hashable, Codable, Identifiable{
     var description: String
     var rating: Int // 0-5 stars
     var isRead: Bool
-    var pages: String
-    var progress: String
+    var pages: Int?
+    var currentPage: Int?
 
     
     private var imageName: String
@@ -30,8 +30,8 @@ struct Book: Hashable, Codable, Identifiable{
     }
     
     init(id: String, name: String, category: String, author: String, 
-         description: String, rating: Int, isRead: Bool, pages: String,
-         progress: String, imageName: String) {
+         description: String, rating: Int, isRead: Bool, pages: Int?,
+         currentPage: Int?, imageName: String) {
         self.id = id
         self.name = name
         self.category = category
@@ -40,7 +40,6 @@ struct Book: Hashable, Codable, Identifiable{
         self.rating = rating
         self.isRead = isRead
         self.pages = pages
-        self.progress = progress
         self.imageName = imageName
     }
     

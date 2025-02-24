@@ -15,8 +15,19 @@ struct AddBookView: View {
     @State private var showingImagePicker = false
     @State private var selectedImage: UIImage?
     
-    var isFormValid: Bool {
-        !name.isEmpty && !author.isEmpty && !category.isEmpty && !description.isEmpty && !pages.isEmpty && !progress.isEmpty
+    private var isValidInput: Bool {
+        guard let totalPages = Int(pages),
+              let currentProgress = Int(progress) else {
+            return false
+        }
+        
+        return !name.isEmpty && 
+               !author.isEmpty && 
+               !category.isEmpty && 
+               !description.isEmpty &&
+               totalPages > 0 && // Ensure positive pages
+               currentProgress >= 0 && // Progress can be 0
+               currentProgress <= totalPages // Progress can't exceed total pages
     }
     
     var body: some View {
@@ -26,10 +37,26 @@ struct AddBookView: View {
                     TextField("Book Title", text: $name)
                     TextField("Author", text: $author)
                     TextField("Category", text: $category)
-                    TextField("Pages", text: $pages)
-                        .keyboardType(.numberPad)
-                    TextField("Progress", text: $progress)
-                        .keyboardType(.numberPad)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        TextField("Total Pages", text: $pages)
+                            .keyboardType(.numberPad)
+                        
+                        if let totalPages = Int(pages), totalPages > 0 {
+                            TextField("Current Progress", text: $progress)
+                                .keyboardType(.numberPad)
+                            
+                            if let currentProgress = Int(progress) {
+                                ProgressView(
+                                    value: Double(currentProgress),
+                                    total: Double(totalPages)
+                                )
+                                Text("\(currentProgress)/\(totalPages) pages")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
                     
                     Toggle("Already Read", isOn: $isRead)
                 }
@@ -75,7 +102,7 @@ struct AddBookView: View {
                         addBook()
                         dismiss()
                     }
-                    .disabled(!isFormValid)
+                    .disabled(!isValidInput)
                 }
             }
             .sheet(isPresented: $showingImagePicker) {
@@ -104,8 +131,8 @@ struct AddBookView: View {
             description: description.trimmingCharacters(in: .whitespacesAndNewlines),
             rating: rating,
             isRead: isRead,
-            pages: pages,
-            progress: progress,
+            pages: Int(pages) ?? 0,
+            currentPage: Int(progress) ?? 0,
             imageName: imageName
         )
         

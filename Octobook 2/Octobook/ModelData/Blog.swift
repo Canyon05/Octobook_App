@@ -14,13 +14,15 @@ struct Blog: Hashable, Codable, Identifiable {
     var userId: String
     var bookId: String
     var date: String
+    var pages: String
     var blogtext: String
     
-    init(id: String, userId: String, bookId: String, date: String, blogtext: String) {
+    init(id: String, userId: String, bookId: String, date: String, pages: String, blogtext: String) {
         self.id = id
         self.userId = userId
         self.bookId = bookId
         self.date = date
+        self.pages = pages
         self.blogtext = blogtext
     }
 }

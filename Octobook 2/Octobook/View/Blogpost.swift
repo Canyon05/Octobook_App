@@ -24,7 +24,7 @@ struct Blogpost: View {
             HStack{
                 Text(blog.date)
                 Spacer()
-                Text(blog.bookId) //Bookname
+                Text(blog.pages) //Bookname
             }
             .font(.subheadline)
             .padding(10)

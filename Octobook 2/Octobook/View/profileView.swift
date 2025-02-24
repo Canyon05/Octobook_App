@@ -48,27 +48,6 @@ struct profileView: View {
             
             Spacer()
             
-            HStack {
-                Text("Currently reading :")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Spacer()
-            }
-            .padding(3.0)
-            .padding(.leading, 5.0)
-            Divider()
-            
-            ZStack{
-                BookRow(bookData: bookData, book: bookData.books[0])
-                    .padding(.horizontal, 25.0)
-            }
-            .frame(height: 100.0)
-            .background(Color.white)
-            .cornerRadius(10)
-            .padding(.horizontal, 19.0)
-            .padding(.vertical, 10)
-            .shadow(radius: 5)
-            
             HStack{
                 Text("Journal")
                     .font(.subheadline)
@@ -80,7 +59,7 @@ struct profileView: View {
             Divider()
             let journalData = JournalData()
             VStack{
-                journalView(userData: userData, user: user, journalData: journalData, blog: journalData.blogs[0])
+                JournalView(userData: userData, journalData: journalData, user: userData.users[0], blog: journalData.blogs[0])
             }
             
         }
