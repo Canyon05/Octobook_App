@@ -7,33 +7,59 @@
 
 import SwiftUI
 
-struct Blogpost: View {
+struct BlogPost: View {
     @ObservedObject var journalData: JournalData
     var blog: Blog
+    @StateObject private var bookData = BookData()
     
-
+    private var associatedBook: Book? {
+        bookData.books.first { $0.id == blog.bookId }
+    }
+    
     var body: some View {
-        
-        VStack{
-            ScrollView{
-                Text(blog.blogtext)
-                    .lineLimit(9, reservesSpace: true)
-                    .padding(25)
+        VStack(spacing: 0) {
+            // Content ScrollView
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    // Book title and pages read
+                    HStack {
+                        if let book = associatedBook {
+                            Text(book.name)
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                        }
+                        
+                        Spacer()
+                        
+                        HStack(spacing: 4) {
+                            Image(systemName: "book")
+                                .foregroundColor(.secondary)
+                            Text("\(blog.pages) pages")
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    // Blog content with preview
+                    ScrollView{
+                        Text(blog.blogtext)
+                            .font(.body)
+                            .foregroundColor(.primary)
+                            .padding(.vertical, 8)
+                    }
+                    // Date and "Read more" link
+                    HStack {
+                        Text(blog.date)
+                            .foregroundColor(.secondary)
+                        
+                        Spacer()
+                    }
+                }
+                .padding(.horizontal, 25)
+                .padding(.vertical, 16)
             }
-            Divider()
-            HStack{
-                Text(blog.date)
-                Spacer()
-                Text(blog.pages) //Bookname
-            }
-            .font(.subheadline)
-            .padding(10)
         }
-        .frame(height: 300)
-        .background(Color.white)
-        .cornerRadius(15)
-        .shadow(radius: 5)
-        .padding(25)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
     }
     
     private func getDocumentsDirectory() -> URL {
@@ -42,8 +68,8 @@ struct Blogpost: View {
     
 }
 
-
 #Preview {
     let journalData = JournalData()
-    Blogpost(journalData: journalData, blog: journalData.blogs[0])
+    BlogPost(journalData: journalData, blog: journalData.blogs[0])
+        .preferredColorScheme(.light)
 }

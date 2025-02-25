@@ -45,7 +45,7 @@ class UserData: ObservableObject {
             FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         }
         
-        private func saveUsers() {
+        func saveUsers() {
             let url = getDocumentsDirectory().appendingPathComponent(fileName)
             if let data = try? JSONEncoder().encode(users) {
                 try? data.write(to: url)

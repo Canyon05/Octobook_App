@@ -3,8 +3,9 @@
         "id": "0",
         "name": "Canyon",
         "booksRead": "5",
-        "currentlyReading" : "0",
+        "currentlyReading" : "1",
         "journalIndex": "0",
+        "profileImage": "CallMeByYourName_BookCover",
         "backgroundImage": "ForthWing_BookCover"
     },
     {
@@ -13,6 +14,7 @@
         "booksRead": "5",
         "currentlyReading" : "0",
         "journalIndex": "1",
+        "profileImage": "CallMeByYourName_BookCover",
         "backgroundImage": "ForthWing_BookCover"
     }
 ]

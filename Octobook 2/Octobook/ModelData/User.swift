@@ -14,8 +14,10 @@ struct User: Hashable, Codable, Identifiable {
     var name: String
     var booksRead: String
     var currentlyReading: String
+    var profileImage: String
+    var backgroundImage: String
     
-    private var backgroundImage: String
+    
     var image: Image {
         if let uiImage = loadImageFromDocuments(named: backgroundImage) {
             return Image(uiImage: uiImage)
@@ -23,11 +25,12 @@ struct User: Hashable, Codable, Identifiable {
         return Image(backgroundImage)
     }
     
-    init(id: String, name: String, booksRead: String, currentlyReading: String, backgroundImage: String) {
+    init(id: String, name: String, booksRead: String, currentlyReading: String, profileImage: String, backgroundImage: String) {
         self.id = id
         self.name = name
         self.booksRead = booksRead
         self.currentlyReading = currentlyReading
+        self.profileImage = profileImage
         self.backgroundImage = backgroundImage
     }
     

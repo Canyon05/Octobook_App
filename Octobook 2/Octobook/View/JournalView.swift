@@ -18,6 +18,32 @@ struct JournalView: View {
     @State private var selectedBookId: String? = nil
     @State private var searchText = ""
     
+    // Add EditableUser struct
+    private struct EditableUser {
+        var name: String
+        var booksRead: String
+        var selectedImage: UIImage?
+        var selectedBackgroundImage: UIImage?
+        
+        init(user: User) {
+            self.name = user.name
+            self.booksRead = user.booksRead
+            self.selectedImage = nil
+            self.selectedBackgroundImage = nil
+        }
+    }
+    
+    @State private var editedUser: EditableUser
+    
+    init(userData: UserData, journalData: JournalData, user: User, blog: Blog) {
+        self.userData = userData
+        self.journalData = journalData
+        self.user = user
+        self.blog = blog
+        // Initialize the editedUser state
+        _editedUser = State(initialValue: EditableUser(user: user))
+    }
+    
     private var selectedBook: Book? {
         if let id = selectedBookId {
             return bookData.books.first { $0.id == id }
@@ -39,37 +65,76 @@ struct JournalView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 12) {
-                    // Selected Book Section
-                    if let book = selectedBook {
-                        VStack(alignment: .leading, spacing: 8) {
-                            BookRow(bookData: bookData, book: book)
-                                .padding(.horizontal, 25)
+            // Book Selection Menu
+            Menu {
+                Button("Currently Reading") {
+                    selectedBookId = nil
+                }
+                
+                ForEach(bookData.books) { book in
+                    Button(action: {
+                        selectedBookId = book.id
+                    }) {
+                        HStack {
+                            Text(book.name)
+                            if selectedBookId == book.id {
+                                Image(systemName: "checkmark")
+                            }
                         }
                     }
-                    
-                    // Controls Section
-                    ControlsSection(
-                        selectedBookId: $selectedBookId,
-                        showingAddBlog: $showingAddBlog,
-                        books: bookData.books,
-                        journalData: journalData
-                    )
-                    
-                    // Search Bar
-                    SearchBar(text: $searchText)
-                        .padding(.horizontal, 25.0)
-                    
-                    // Blog Posts Section
-                    BlogPostsSection(filteredBlogs: filteredBlogs, journalData: journalData)
                 }
-                .padding(.top)
+            } label: {
+                HStack {
+                    Image(systemName: "book")
+                    Text(selectedBook?.name ?? "Currently Reading")
+                    Image(systemName: "chevron.down")
+                        .font(.caption)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
             }
-            .refreshable {
-                bookData.loadBooks()
-                journalData.loadBlogs()
+            .padding(.horizontal)
+            
+            // Selected Book Row
+            if let book = selectedBook {
+                BookRow(bookData: bookData, book: book)
+                    .padding(.horizontal)
             }
+            
+            // Search and Blog List
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 12) {
+                    SearchBar(text: $searchText)
+                        .padding(.horizontal)
+                    
+                    if filteredBlogs.isEmpty {
+                        EmptyStateView()
+                    } else {
+                        ForEach(filteredBlogs) { blog in
+                            NavigationLink {
+                                BlogPost(journalData: journalData, blog: blog)
+                            } label: {
+                                BlogPreview(blog: blog)
+                                    .padding(.horizontal)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
+                    }
+                }
+            }
+        }
+        .navigationTitle("Journal")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: { showingAddBlog = true }) {
+                    Image(systemName: "plus")
+                }
+            }
+        }
+        .sheet(isPresented: $showingAddBlog) {
+            AddBlogPost(journalData: journalData)
         }
     }
 }
@@ -156,58 +221,6 @@ private struct ControlsSection: View {
             
             AddBlogButton(showingAddBlog: $showingAddBlog, journalData: journalData)
         }
-        .padding(.horizontal)
-    }
-}
-
-private struct BlogPostsSection: View {
-    let filteredBlogs: [Blog]
-    let journalData: JournalData
-    
-    var body: some View {
-        Group {
-            if !filteredBlogs.isEmpty {
-                Text("Blog Posts:")
-                    .font(.headline)
-                    .padding(.horizontal, 25)
-                
-                ForEach(filteredBlogs) { blog in
-                    NavigationLink {
-                        Blogpost(journalData: journalData, blog: blog)
-                    } label: {
-                        BlogPostPreview(blog: blog)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                }
-            } else {
-                EmptyStateView()
-            }
-        }
-    }
-}
-
-private struct BlogPostPreview: View {
-    let blog: Blog
-    @StateObject private var bookData = BookData()
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(blog.date)
-                    .font(.caption)
-                Spacer()
-                Text("pages read: " + blog.pages)
-                    .font(.caption)
-            }
-            
-            Text(blog.blogtext)
-                .font(.body)
-                .lineLimit(2)
-        }
-        .padding()
-        .background(Color(.white))
-        .cornerRadius(10)
-        .shadow(radius: 5)
         .padding(.horizontal)
     }
 }

@@ -56,4 +56,9 @@ class JournalData: ObservableObject {
             blogs.append(blog)
             saveBlogs()
         }
+        
+        func removeBlog(_ blog: Blog) {
+            blogs.removeAll { $0.id == blog.id }
+            saveBlogs()
+        }
 }
