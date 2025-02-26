@@ -12,17 +12,22 @@ struct BlogPreview: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(blog.date)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            HStack {
+                Text(blog.date)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                
+                Spacer()
+                
+                Text("Pages read: \(blog.pages)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             
             Text(blog.blogtext)
+                .multilineTextAlignment(.leading)
                 .lineLimit(2)
                 .foregroundStyle(.primary)
-            
-            Text("Pages read: \(blog.pages)")
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)

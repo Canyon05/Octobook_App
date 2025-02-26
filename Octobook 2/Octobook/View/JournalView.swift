@@ -18,32 +18,6 @@ struct JournalView: View {
     @State private var selectedBookId: String? = nil
     @State private var searchText = ""
     
-    // Add EditableUser struct
-    private struct EditableUser {
-        var name: String
-        var booksRead: String
-        var selectedImage: UIImage?
-        var selectedBackgroundImage: UIImage?
-        
-        init(user: User) {
-            self.name = user.name
-            self.booksRead = user.booksRead
-            self.selectedImage = nil
-            self.selectedBackgroundImage = nil
-        }
-    }
-    
-    @State private var editedUser: EditableUser
-    
-    init(userData: UserData, journalData: JournalData, user: User, blog: Blog) {
-        self.userData = userData
-        self.journalData = journalData
-        self.user = user
-        self.blog = blog
-        // Initialize the editedUser state
-        _editedUser = State(initialValue: EditableUser(user: user))
-    }
-    
     private var selectedBook: Book? {
         if let id = selectedBookId {
             return bookData.books.first { $0.id == id }
@@ -65,43 +39,77 @@ struct JournalView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            // Book Selection Menu
-            Menu {
-                Button("Currently Reading") {
-                    selectedBookId = nil
-                }
-                
-                ForEach(bookData.books) { book in
-                    Button(action: {
-                        selectedBookId = book.id
-                    }) {
-                        HStack {
-                            Text(book.name)
-                            if selectedBookId == book.id {
-                                Image(systemName: "checkmark")
-                            }
-                        }
-                    }
-                }
-            } label: {
-                HStack {
-                    Image(systemName: "book")
-                    Text(selectedBook?.name ?? "Currently Reading")
-                    Image(systemName: "chevron.down")
-                        .font(.caption)
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-            }
-            .padding(.horizontal)
             
             // Selected Book Row
             if let book = selectedBook {
-                BookRow(bookData: bookData, book: book)
-                    .padding(.horizontal)
+                    BookRow(bookData: bookData, book: book)
+                    .padding(.horizontal, 25.0)
             }
+            
+            // Book Selection Menu
+            HStack {
+                Menu {
+                    Button("Currently Reading") {
+                        selectedBookId = nil
+                    }
+                    
+                    ForEach(bookData.books) { book in
+                        Button(action: {
+                            selectedBookId = book.id
+                        }) {
+                            HStack {
+                                Text(book.name)
+                                if selectedBookId == book.id {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: "book")
+                        Text(selectedBook?.name ?? "Currently Reading")
+                        Image(systemName: "chevron.down")
+                            .font(.caption)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                }
+                Spacer()
+                
+                Menu {
+                    Button("Edit") {
+                        selectedBookId = nil
+                    }
+                    
+                    ForEach(bookData.books) { book in
+                        Button(action: {
+                            selectedBookId = book.id
+                        }) {
+                            HStack {
+                                Text(book.name)
+                                if selectedBookId == book.id {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Text("Edit")
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                }
+            }
+            .padding(.horizontal, 25.0)
+            
+            
+            
             
             // Search and Blog List
             ScrollView {
@@ -113,17 +121,21 @@ struct JournalView: View {
                         EmptyStateView()
                     } else {
                         ForEach(filteredBlogs) { blog in
-                            NavigationLink {
-                                BlogPost(journalData: journalData, blog: blog)
-                            } label: {
-                                BlogPreview(blog: blog)
-                                    .padding(.horizontal)
-                            }
-                            .buttonStyle(PlainButtonStyle())
+                            let journalData = JournalData()
+                            BlogPostRow(blog: journalData.blogs[0],
+                                        journalData: journalData,
+                                        isEditing: false)
                         }
                     }
                 }
             }
+            .padding(.horizontal, 5.0)
+            .padding(.vertical, 10.0)
+            .background(Color.white)
+            .cornerRadius(20)
+            .shadow(radius: 5)
+            .padding([.leading, .bottom, .trailing], 15.0)
+            
         }
         .navigationTitle("Journal")
         .toolbar {
