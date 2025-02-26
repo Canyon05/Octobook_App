@@ -35,7 +35,7 @@ struct ProfileView: View {
                         Image(uiImage: backgroundImage)
                             .resizable()
                     } else {
-                        Image("CallMeByYourName_BookCover")
+                        Image("OctoArmsRight")
                             .resizable()
                     }
                 }

@@ -81,4 +81,11 @@ class BookData: ObservableObject {
                 saveBooks()
             }
         }
+
+        func deleteBook(_ book: Book) {
+            if let index = books.firstIndex(where: { $0.id == book.id }) {
+                books.remove(at: index)
+                saveBooks()
+            }
+        }
 }

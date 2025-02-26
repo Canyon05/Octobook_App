@@ -14,6 +14,10 @@ struct BookList: View {
     @State private var selectedCategory: String? = nil
     @State private var readFilter: ReadFilter = .all
     @State private var showingAddBook = false
+    @State private var editMode: EditMode = .inactive
+    @State private var showingDeleteAlert = false
+    @State private var bookToDelete: Book?
+    @State private var selectedBooks = Set<Book.ID>()
     
     enum ReadFilter {
         case all, read, unread
@@ -45,7 +49,7 @@ struct BookList: View {
 
     var body: some View {
         NavigationSplitView {
-            List {
+            List(selection: editMode.isEditing ? $selectedBooks : nil) {
                 Section {
                     Menu {
                         ForEach(0...5, id: \.self) { rating in
@@ -98,6 +102,21 @@ struct BookList: View {
                             BookRow(bookData: bookData, book: book)
                         }
                         .listRowBackground(Color(white: 1, opacity: 0.8))
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                bookToDelete = book
+                                showingDeleteAlert = true
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                    }
+                    .onDelete(perform: deleteBooks)
+                    
+                    if filteredBooks.isEmpty {
+                        Text("No books match your filters")
+                            .foregroundColor(.secondary)
+                            .italic()
                     }
                 } header: {
                     Text("Books")
@@ -119,15 +138,67 @@ struct BookList: View {
                         Image(systemName: "plus")
                     }
                 }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EditButton()
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if editMode.isEditing && !selectedBooks.isEmpty {
+                        Button(role: .destructive) {
+                            showingDeleteAlert = true
+                        } label: {
+                            Text("Delete Selected")
+                                .foregroundColor(.red)
+                        }
+                    }
+                }
             }
+            .environment(\.editMode, $editMode)
             .sheet(isPresented: $showingAddBook) {
                 AddBookView(bookData: bookData)
             }
-        }
-        detail: {
+            .alert("Delete Book", isPresented: $showingDeleteAlert) {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete", role: .destructive) {
+                    if editMode.isEditing {
+                        deleteSelectedBooks()
+                    } else if let book = bookToDelete {
+                        withAnimation {
+                            bookData.deleteBook(book)
+                        }
+                    }
+                }
+            } message: {
+                if editMode.isEditing {
+                    Text("Are you sure you want to delete the selected books? This action cannot be undone.")
+                } else if let book = bookToDelete {
+                    Text("Are you sure you want to delete '\(book.name)'? This action cannot be undone.")
+                }
+            }
+        } detail: {
             Text("Select a Book")
         }
-        
+    }
+    
+    private func deleteBooks(at offsets: IndexSet) {
+        withAnimation {
+            let booksToDelete = offsets.map { filteredBooks[$0] }
+            booksToDelete.forEach { book in
+                bookData.deleteBook(book)
+            }
+        }
+    }
+    
+    private func deleteSelectedBooks() {
+        withAnimation {
+            selectedBooks.forEach { bookId in
+                if let book = bookData.books.first(where: { $0.id == bookId }) {
+                    bookData.deleteBook(book)
+                }
+            }
+            selectedBooks.removeAll()
+            editMode = .inactive
+        }
     }
 }
 
