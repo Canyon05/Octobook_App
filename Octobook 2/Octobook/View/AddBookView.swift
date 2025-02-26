@@ -106,7 +106,11 @@ struct AddBookView: View {
                 }
             }
             .sheet(isPresented: $showingImagePicker) {
-                ImagePicker(selectedImage: $selectedImage)
+                ImagePicker(image: $selectedImage, isPresented: $showingImagePicker, onImageSelected: { image in
+                    selectedImage = image
+                })
+                    .accessibilityLabel("Image Picker")
+                    .accessibilityHint("Select a cover image for your book")
             }
         }
     }

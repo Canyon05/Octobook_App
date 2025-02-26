@@ -6,7 +6,12 @@
         "currentlyReading" : "1",
         "journalIndex": "0",
         "profileImage": "CallMeByYourName_BookCover",
-        "backgroundImage": "ForthWing_BookCover"
+        "backgroundImage": "ForthWing_BookCover",
+        "favoriteBookIds": [
+            "0",
+            "1",
+            "2"
+          ]
     },
     {
         "id": "1",
@@ -15,6 +20,11 @@
         "currentlyReading" : "0",
         "journalIndex": "1",
         "profileImage": "CallMeByYourName_BookCover",
-        "backgroundImage": "ForthWing_BookCover"
+        "backgroundImage": "ForthWing_BookCover",
+        "favoriteBookIds": [
+            "1",
+            "2",
+            "0"
+          ]
     }
 ]

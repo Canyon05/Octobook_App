@@ -16,6 +16,7 @@ struct User: Hashable, Codable, Identifiable {
     var currentlyReading: String
     var profileImage: String
     var backgroundImage: String
+    var favoriteBookIds: Set<String>
     
     
     var image: Image {
@@ -32,6 +33,7 @@ struct User: Hashable, Codable, Identifiable {
         self.currentlyReading = currentlyReading
         self.profileImage = profileImage
         self.backgroundImage = backgroundImage
+        self.favoriteBookIds = []
     }
     
     private func loadImageFromDocuments(named: String) -> UIImage? {
