@@ -21,6 +21,7 @@ struct ProfileView: View {
     @State private var showingImagePicker = false
     @State private var imagePickerType: ImagePickerType = .profile
     @State private var selectedImage: UIImage?
+    @State private var isEditing = false
     
     var body: some View {
         ScrollView {
@@ -67,11 +68,17 @@ struct ProfileView: View {
             }
             .padding(3.0)
             .padding(.leading, 5.0)
-            Divider()
-            VStack{
-                JournalView(userData: userData, journalData: journalData, user: userData.users[0], blog: journalData.blogs[0])
-            }
             
+            Divider()
+            
+            VStack{
+                JournalView(
+                    userData: userData,
+                    journalData: journalData,
+                    user: userData.users[0],
+                    blog: journalData.blogs[0]
+                )
+            }
         }
     }
     

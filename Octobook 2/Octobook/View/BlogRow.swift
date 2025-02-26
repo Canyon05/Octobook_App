@@ -14,6 +14,7 @@ struct BlogPostRow: View {
     @State private var showingDeleteAlert = false
     @State private var showingFullPost = false
     
+    
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 8) {

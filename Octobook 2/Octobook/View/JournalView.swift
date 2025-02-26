@@ -17,6 +17,7 @@ struct JournalView: View {
     @State private var showingAddBlog = false
     @State private var selectedBookId: String? = nil
     @State private var searchText = ""
+    @State private var isEditing = false
     
     private var selectedBook: Book? {
         if let id = selectedBookId {
@@ -46,7 +47,7 @@ struct JournalView: View {
                     .padding(.horizontal, 25.0)
             }
             
-            // Book Selection Menu
+            // Book Selection Menu and Edit Button
             HStack {
                 Menu {
                     Button("Currently Reading") {
@@ -72,39 +73,39 @@ struct JournalView: View {
                         Image(systemName: "chevron.down")
                             .font(.caption)
                     }
+                    .lineLimit(1)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    .background(Color(.systemGray6))
+                    .background(Color(.white))
                     .cornerRadius(8)
+                    .shadow(radius: 2)
                 }
+                
                 Spacer()
                 
-                Menu {
-                    Button("Edit") {
-                        selectedBookId = nil
-                    }
-                    
-                    ForEach(bookData.books) { book in
-                        Button(action: {
-                            selectedBookId = book.id
-                        }) {
-                            HStack {
-                                Text(book.name)
-                                if selectedBookId == book.id {
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                    }
-                } label: {
-                    HStack {
-                        Text("Edit")
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
+                Button(action: {
+                    showingAddBlog = true
+                }) {
+                    Text("Add")
                 }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color(.white))
+                .cornerRadius(8)
+                .shadow(radius: 2)
+                
+                
+                // Edit button
+                Button(action: {
+                    isEditing.toggle()
+                }) {
+                    Text(isEditing ? "Done" : "Edit")
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color(.white))
+                .cornerRadius(8)
+                .shadow(radius: 2)
             }
             .padding(.horizontal, 25.0)
             
@@ -121,10 +122,11 @@ struct JournalView: View {
                         EmptyStateView()
                     } else {
                         ForEach(filteredBlogs) { blog in
-                            let journalData = JournalData()
-                            BlogPostRow(blog: journalData.blogs[0],
-                                        journalData: journalData,
-                                        isEditing: false)
+                            BlogPostRow(
+                                blog: blog,
+                                journalData: journalData,
+                                isEditing: isEditing
+                            )
                         }
                     }
                 }
@@ -146,7 +148,10 @@ struct JournalView: View {
             }
         }
         .sheet(isPresented: $showingAddBlog) {
-            AddBlogPost(journalData: journalData)
+            AddBlogPost(
+                journalData: journalData,
+                initialBookId: selectedBookId ?? user.currentlyReading
+            )
         }
     }
 }
@@ -161,13 +166,14 @@ struct JournalView: View {
 private struct AddBlogButton: View {
     @Binding var showingAddBlog: Bool
     let journalData: JournalData
+    let BookId: String
     
     var body: some View {
         Button(action: { showingAddBlog = true }) {
             Image(systemName: "plus")
         }
         .sheet(isPresented: $showingAddBlog) {
-            AddBlogPost(journalData: journalData)
+            AddBlogPost(journalData: journalData, initialBookId: BookId)
         }
     }
 }
@@ -231,7 +237,7 @@ private struct ControlsSection: View {
             
             Spacer()
             
-            AddBlogButton(showingAddBlog: $showingAddBlog, journalData: journalData)
+            AddBlogButton(showingAddBlog: $showingAddBlog, journalData: journalData, BookId: selectedBookId ?? "0")
         }
         .padding(.horizontal)
     }
@@ -366,3 +372,4 @@ private struct SearchBar: View {
         }
     }
 }
+

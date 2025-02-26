@@ -11,22 +11,39 @@ struct AddBlogPost: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var journalData: JournalData
     @StateObject private var bookData = BookData()
+    let initialBookId: String
     
+    // MARK: - State
     @State private var blogText: String = ""
-    @State private var selectedBookId: String?
+    @State private var selectedBookId: String?  // Make optional
     @State private var date = Date.now
     @State private var pagesRead: String = ""
+    @State private var showingError = false
+    @State private var errorMessage = ""
+    @FocusState private var focusedField: Field?
     
+    // MARK: - Focus Fields
+    enum Field {
+        case pages, blogText
+    }
+    
+    init(journalData: JournalData, initialBookId: String) {
+        self.journalData = journalData
+        self.initialBookId = initialBookId
+        _selectedBookId = State(initialValue: initialBookId)
+    }
+    
+    // MARK: - Computed Properties
     private var isValidInput: Bool {
-        guard let pages = Int(pagesRead),
-              let book = selectedBook,
+        guard let bookId = selectedBookId,
+              let book = bookData.books.first(where: { $0.id == bookId }),
+              let pages = Int(pagesRead),
               let totalPages = book.pages else { 
             return false 
         }
         
         let currentProgress = book.currentPage ?? 0
-        return !blogText.isEmpty &&
-               selectedBookId != nil &&
+        return !blogText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
                pages > 0 && 
                (currentProgress + pages) <= totalPages
     }
@@ -49,114 +66,145 @@ struct AddBlogPost: View {
         return formatter.string(from: date)
     }
     
+    // MARK: - View
     var body: some View {
-        VStack(spacing: 16) {
-            // Book Selection and Pages Section
-            VStack(alignment: .leading, spacing: 8) {
-                // Book Selection Menu
-                HStack {
-                    Menu {
-                        ForEach(bookData.books) { book in
-                            Button(action: {
-                                selectedBookId = book.id
-                                pagesRead = "" // Reset pages when book changes
-                            }) {
-                                HStack {
-                                    Text(book.name)
-                                    if selectedBookId == book.id {
-                                        Image(systemName: "checkmark")
-                                    }
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Image(systemName: "book")
-                            Text(selectedBook?.name ?? "Choose a book")
-                                .foregroundColor(selectedBookId == nil ? .secondary : .primary)
-                            Spacer()
-                            Image(systemName: "chevron.down")
-                                .font(.caption)
-                        }
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                    }
-                    
-                    // Pages Read Input with validation
-                    if let book = selectedBook,
-                       let totalPages = book.pages {
-                        let currentProgress = book.currentPage ?? 0
-                        let remainingPages = totalPages - currentProgress
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                TextField("Pages Read", text: $pagesRead)
-                                    .keyboardType(.numberPad)
-                                    .textFieldStyle(.roundedBorder)
-                                    .frame(width: 80)
-                            }
-                            
-                            if let pages = Int(pagesRead) {
-                                ProgressView(
-                                    value: Double(currentProgress + pages),
-                                    total: Double(totalPages)
-                                )
-                                Text("\(currentProgress + pages)/\(totalPages) pages")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
+        NavigationView {
+            VStack(spacing: 16) {
+                HStack{
+                    bookSelectionSection
+                    pagesSection
                 }
-                .padding(.horizontal)
-                
-                // Progress indicator
-                if let book = selectedBook,
-                   let totalPages = book.pages {
-                    ProgressView(value: Double(book.currentPage ?? 0), total: Double(totalPages))
-                        .padding(.horizontal)
-                }
-            }
-            
-            // Blog Text Input
-            TextField("Write your thoughts...", text: $blogText, axis: .vertical)
-                .lineLimit(16, reservesSpace: true)
-                .textFieldStyle(.roundedBorder)
-                .padding()
-            
-            Divider()
-            
-            // Bottom Bar
-            HStack {
-                if let remaining = remainingPages {
-                    Text("\(remaining) pages remaining")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                
+                blogTextSection
+                progressSection
+                submitButton
                 Spacer()
-                
-                Button("Submit") {
-                    submitBlogAndProgress()
-                    dismiss()
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(!isValidInput || blogText.isEmpty)
             }
             .padding()
+            .alert("Error", isPresented: $showingError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(errorMessage)
+            }
+            .toolbar {
+                ToolbarItem(placement: .keyboard) {
+                    Button("Done") {
+                        focusedField = nil
+                    }
+                }
+            }
+            .navigationTitle("New Journal Entry")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .frame(height: 600)
-        .background(Color(UIColor.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .shadow(radius: 5)
-        .padding(25)
     }
     
+    // MARK: - View Components
+    private var bookSelectionSection: some View {
+        Menu {
+            ForEach(bookData.books) { book in
+                Button(action: {
+                    selectedBookId = book.id
+                    pagesRead = "" // Reset pages when book changes
+                }) {
+                    HStack {
+                        Text(book.name)
+                        if selectedBookId == book.id {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+            }
+        } label: {
+            HStack {
+                Image(systemName: "book")
+                Text(selectedBook?.name ?? "Choose a book")
+                    .foregroundColor(selectedBookId == nil ? .secondary : .primary)
+                Spacer()
+                Image(systemName: "chevron.down")
+                    .font(.caption)
+            }
+            .lineLimit(1)
+            .padding()
+            .background(Color(.systemGray6))
+            .cornerRadius(10)
+        }
+    }
+    
+    private var pagesSection: some View {
+        VStack(alignment: .leading) {
+            if let book = selectedBook,
+               let totalPages = book.pages {
+                HStack {
+                    TextField("Pages", text: $pagesRead)
+                        .keyboardType(.numberPad)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 80)
+                        .focused($focusedField, equals: .pages)
+                    
+                    Text("/ \(totalPages)")
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+    }
+    
+    private var blogTextSection: some View {
+        TextField("Write your thoughts...", text: $blogText, axis: .vertical)
+            .lineLimit(20, reservesSpace: true)
+            .textFieldStyle(.roundedBorder)
+            .focused($focusedField, equals: .blogText)
+    }
+    
+    private var progressSection: some View {
+        Group {
+            if let book = selectedBook,
+               let totalPages = book.pages {
+                ProgressView(value: Double(book.currentPage ?? 0), total: Double(totalPages))
+                    .padding(.horizontal)
+            } else {
+                EmptyView()
+            }
+        }
+    }
+    
+    private var submitButton: some View {
+        HStack {
+            if let remaining = remainingPages {
+                Text("\(remaining) pages remaining")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            
+            Spacer()
+            
+            Button("Submit") {
+                submitBlogAndProgress()
+                dismiss()
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(!isValidInput || blogText.isEmpty)
+        }
+        .padding()
+    }
+    
+    // MARK: - Actions
     private func submitBlogAndProgress() {
-        guard let pages = Int(pagesRead),
-              let book = selectedBook else {
+        guard let bookId = selectedBookId,
+              let book = bookData.books.first(where: { $0.id == bookId }),
+              let pages = Int(pagesRead),
+              let totalPages = book.pages else {
+            showError("Invalid input. Please check your entries.")
+            return
+        }
+        
+        let currentProgress = book.currentPage ?? 0
+        if currentProgress + pages > totalPages {
+            showError("Cannot exceed total pages for this book.")
+            return
+        }
+        
+        let trimmedText = blogText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedText.isEmpty else {
+            showError("Please write some thoughts about your reading.")
             return
         }
         
@@ -165,20 +213,29 @@ struct AddBlogPost: View {
             id: UUID().uuidString,
             userId: "0",
             bookId: book.id,
-            date: currentDate,
+            date: formatDate(date),
             pages: pagesRead,
-            blogtext: blogText
+            blogtext: trimmedText
         )
-        journalData.addBlog(newBlog)
         
-        // Update the book's progress
-        let currentProgress = book.currentPage ?? 0
-        let newProgress = currentProgress + pages
-        bookData.updateProgress(for: book, to: newProgress)
+        journalData.addBlog(newBlog)
+        bookData.updateProgress(for: book, to: currentProgress + pages)
+        dismiss()
+    }
+    
+    private func showError(_ message: String) {
+        errorMessage = message
+        showingError = true
+    }
+    
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: date)
     }
 }
 
 #Preview {
     let journalData = JournalData()
-    AddBlogPost(journalData: journalData)
+    AddBlogPost(journalData: journalData, initialBookId: "1")
 }
