@@ -34,11 +34,15 @@ There are three Tabview items in the Tabview navigationbar.
 
 The Library is coded in the "BookList" file. This View is constructed using "NavigationSplitView". In the "NavigationSplitView" is a section with a header ("Filters") for the filtermenu. Each filter is build using "Menu" and a dynamic "label".
 
-![Screenshot of the Filtersection in the BookList view](/Images/screenshot_FilterMenu.jpeg)
+<p align="center">
+  <img src="/Images/screenshot_FilterMenu.jpeg" width="500" alt="Screenshot of the Filtersection in the BookList view">
+</p>
 
 The following section is the booklist. It displays a "NavigationLink" for each Book in the Library that meets the filter the user had set. The navigationlink's destination is "BookDetails" View, for that specific book. Also the navigationlink is displayed using "BookRow". I made the "listRowBackground" white and reduced the opacity. There is also a "SwipeAction", for deleting books from the library. If there are no books in the library, that meets the filters set by the user, there will be a text, saying "No Books match your filers.".
 
-![Screenshot of the BookList Section](/Images/screenshot_Booklist.jpeg)
+<p align="center">
+  <img src="/Images/screenshot_Booklist.jpeg" width="500" alt="Screenshot of the BookList Section">
+</p>
 
 The BookListView has two private functions.
 The "deleteBooks" function sets a Animation and calls the deleteBook function in BookData. this function is for the swipeAction(single deletion).
