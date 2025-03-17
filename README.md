@@ -10,7 +10,11 @@ The user can costumize the profile view, where they can show off their favorite 
 
 In the current reading tab is the journal feature implemented. The user can add journal entries with date, pages read and can write down some thoughts while reading these pages. The journal entries are sorted for each book.
 
-![Screenshot of the Library tab in the OctobookApp.](/Images/IMG_5038.PNG){ width=250}![Screenshot of the Library tab in the OctobookApp.](/Images/IMG_5039.PNG){ width=250}![Screenshot of the Library tab in the OctobookApp.](/Images/IMG_5040.PNG){ width=250}
+<p align="center">
+  <img src="/Images/IMG_5038.PNG" width="250" alt="Screenshot of the Library tab in the OctobookApp.">
+  <img src="/Images/IMG_5039.PNG" width="250" alt="Screenshot of the Profile View tab in the OctobookApp.">
+  <img src="/Images/IMG_5040.PNG" width="250" alt="Screenshot of the Journal tab in the OctobookApp.">
+</p>
 
 ---
 ### [ContentView](/Octobook/Octobook/View/ContentView.swift)
@@ -52,9 +56,6 @@ The adding a book button opens the "AddBookView". The "AddBookView" let the user
 <p align="center">
   <img src="/Images/screenshot_addBookView.PNG" width="350" alt="screenshot of addBookView">
 </p>
-
-
-![Screenshot of the addBookView](/Images/screenshot_addBookView.PNG)
 
 ---
 
