@@ -13,3 +13,4 @@ In the current reading tab is the journal feature implemented. The user can add 
 ![Screenshot of the Library tab in the OctobookApp.](/Images/IMG_5038.PNG){ width=250}![Screenshot of the Library tab in the OctobookApp.](/Images/IMG_5039.PNG){ width=250}![Screenshot of the Library tab in the OctobookApp.](/Images/IMG_5040.PNG){ width=250}
 
 ---
+### Now Files: 

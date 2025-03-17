@@ -9,7 +9,6 @@ import SwiftUI
 
 
 struct ContentView: View {
-    // Move state objects to be created once
     @StateObject private var userData = UserData()
     @StateObject private var bookData = BookData()
     @StateObject private var journalData = JournalData()
@@ -32,14 +31,12 @@ struct ContentView: View {
                 Image(systemName: "person.fill")
                 Text("Profile")
             }
-            VStack{
-                JournalView(userData: userData, journalData: journalData, user: userData.users[0], blog: journalData.blogs[0])
-                    .background {
-                        Image("2OctoArm_White")
-                            .resizable(resizingMode: .stretch)
-                            .aspectRatio(contentMode: .fill)
-                    }
-            }
+            JournalView(userData: userData, journalData: journalData, user: userData.users[0], blog: journalData.blogs[0])
+                .background {
+                    Image("2OctoArm_White")
+                        .resizable(resizingMode: .stretch)
+                        .aspectRatio(contentMode: .fill)
+                }
             .tabItem{
                 Image(systemName: "book.pages")
                 Text("Current Book")
