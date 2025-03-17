@@ -32,7 +32,7 @@ The Library is coded in the "BookList" file. This View is constructed using "Nav
 
 ![Screenshot of the Filtersection in the BookList view](/Images/screenshot_FilterMenu.jpeg)
 
-The following section is the booklist. It displays a "NavigationLink" for each Book in the Lybrary that meets the filter the user hat set. The navigationlink's destination is "BookDetails" View, for that specific book. Also the navigationlink is displayed using "BookRow". I made the "listRowBackground" white and reduced the opacity. There is also a "SwipeAction", for deleting books from the library. If there are no books in the library, that meets the filters set by the user, there will be a text, saying "No Books match your filers.".
+The following section is the booklist. It displays a "NavigationLink" for each Book in the Library that meets the filter the user had set. The navigationlink's destination is "BookDetails" View, for that specific book. Also the navigationlink is displayed using "BookRow". I made the "listRowBackground" white and reduced the opacity. There is also a "SwipeAction", for deleting books from the library. If there are no books in the library, that meets the filters set by the user, there will be a text, saying "No Books match your filers.".
 
 ![Screenshot of the BookList Section](/Images/screenshot_Booklist.jpeg)
 
@@ -44,8 +44,17 @@ The Background is an self-drawn Image. there is a small Animation, for filtering
 
 If you edit the library, using the toolbaritem called edit, you can choose the books you want to delet. You have to confirm the deletion (there will be an Allert asking you to confirm).
 
-###### adding a book
+---
+
+#### adding a book
 The adding a book button opens the "AddBookView". The "AddBookView" let the user add a new book to their library. Whats most intresting about this view, is how the new bookdata is being stored. There is a private function called "addBook". It saves the Image if selected and creates a new bookdata with explicit parameter names. After the new Bookdata is completely created, the function calls the "addBook" function from the "BookData" to add it to the Library (BookData).
+
+<p align="center">
+  <img src="/Images/screenshot_addBookView.PNG" width="350" alt="screenshot of addBookView">
+</p>
+
+
+![Screenshot of the addBookView](/Images/screenshot_addBookView.PNG)
 
 ---
 
@@ -59,23 +68,23 @@ Data is stored as JSON in the Documents Directory. The data is loaded from that 
 
 ##### Here is a detailed desciption of the Bookdata model. The construction and principles are the same for User and Journal data.
 
-**Storage location** :
-Books are stored in a JSON file ("BookData.json") inside the documents directory. If not found, data is loaded from the app bundle and then saved to the documents directory for future use.
-**Data structure** :
-Each book is stored as a JSON object with properties like id, name, author, rating, is Read, pages and imageName.
-**Loading data** (loadBooks()):
-First it tries to load from the documents directory. If missing, it loads from the App bundle and saves it.
-**Saving data** (saveBooks()):
-Whenever books are modified (read status, rating, progress, etc.), changes are saved back to bookData.json.
-**Modifying data** :
-•	toggleReadStatus(): Marks a book as read/unread.
-•	updateRating(): Updates the book’s rating (0-5).
-•	updateProgress(): Tracks reading progress, marking as read if completed.
-•	addBook(): Adds a new book.
-•	deleteBook(): Removes a book.
-**Book images** :
-Book images are stored either in the documents directory or the app bundle. The app checks for an image in the documents directory first befor using the default one.
-**When the app is restarts**, the data is loaded from the documents directory (or app bundle, if missing). Any modifications presist because changes are saved immediately. 
+**Storage location** :  
+Books are stored in a JSON file ("BookData.json") inside the documents directory. If not found, data is loaded from the app bundle and then saved to the documents directory for future use.  
+**Data structure** :  
+Each book is stored as a JSON object with properties like id, name, author, rating, is Read, pages and imageName.  
+**Loading data** (loadBooks()):  
+First it tries to load from the documents directory. If missing, it loads from the App bundle and saves it.  
+**Saving data** (saveBooks()):  
+Whenever books are modified (read status, rating, progress, etc.), changes are saved back to bookData.json.  
+**Modifying data** :  
+•	toggleReadStatus(): Marks a book as read/unread.  
+•	updateRating(): Updates the book’s rating (0-5).  
+•	updateProgress(): Tracks reading progress, marking as read if completed.  
+•	addBook(): Adds a new book.  
+•	deleteBook(): Removes a book.  
+**Book images** :  
+Book images are stored either in the documents directory or the app bundle. The app checks for an image in the documents directory first befor using the default one.  
+**When the app is restarts**, the data is loaded from the documents directory (or app bundle, if missing). Any modifications presist because changes are saved immediately.  
 
 
 
